@@ -4,6 +4,7 @@ add_executable(hello_freertos
     tasks.c
     blink.c
     case_swap.c
+    led.c
     )
 
 pico_set_program_name(hello_freertos "test")

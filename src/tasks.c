@@ -15,12 +15,7 @@
 #include "tasks.h"
 #include "blink.h"
 #include "case_swap.h"
-
-// The Pico W LED is wired to the CYW43 radio, not to an RP2040 GPIO.
-static void cyw43_led_put(bool on)
-{
-    cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, on);
-}
+#include "led.h"
 
 void blink_task(__unused void *params) {
     // The FreeRTOS flavour of cyw43_arch needs the scheduler running, so the
@@ -29,7 +24,7 @@ void blink_task(__unused void *params) {
     int count = 0;
     bool on = false;
     while (true) {
-        on = blink_step(on, &count, cyw43_led_put);
+        on = blink_step(on, &count, led_put);
         vTaskDelay(BLINK_DELAY_TICKS);
     }
 }
