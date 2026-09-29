@@ -54,11 +54,15 @@ int main(void)
 {
     stdio_init_all();
     hard_assert(cyw43_arch_init() == PICO_OK);
-    sleep_ms(5000); // Give time for TTY to attach.
-    printf("Start tests\n");
-    UNITY_BEGIN();
-    RUN_TEST(test_led_put_and_get);
-    RUN_TEST(test_blink_step_drives_led);
-    sleep_ms(5000);
-    return UNITY_END();
+    // Repeat forever instead of exiting: on WSL/usbipd the serial port can
+    // take several seconds to reach the host after reboot, so a single run
+    // is easily missed. Reflash with `picotool load -f`.
+    while (true) {
+        sleep_ms(5000); // Give time for TTY to attach.
+        printf("Start tests\n");
+        UNITY_BEGIN();
+        RUN_TEST(test_led_put_and_get);
+        RUN_TEST(test_blink_step_drives_led);
+        UNITY_END();
+    }
 }

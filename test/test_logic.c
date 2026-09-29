@@ -146,20 +146,24 @@ void test_blink_step_matches_original_sequence(void)
 int main(void)
 {
     stdio_init_all();
-    sleep_ms(5000); // Give time for TTY to attach.
-    printf("Start tests\n");
-    UNITY_BEGIN();
-    RUN_TEST(test_switch_case_lower_to_upper);
-    RUN_TEST(test_switch_case_upper_to_lower);
-    RUN_TEST(test_switch_case_boundaries_unchanged);
-    RUN_TEST(test_switch_case_non_letters_unchanged);
-    RUN_TEST(test_switch_case_round_trip);
-    RUN_TEST(test_blink_first_iteration_does_not_toggle);
-    RUN_TEST(test_blink_increments_count);
-    RUN_TEST(test_blink_toggles_when_count_not_multiple_of_period);
-    RUN_TEST(test_blink_holds_when_count_multiple_of_period);
-    RUN_TEST(test_blink_step_writes_current_state_once);
-    RUN_TEST(test_blink_step_matches_original_sequence);
-    sleep_ms(5000);
-    return UNITY_END();
+    // Repeat forever instead of exiting: on WSL/usbipd the serial port can
+    // take several seconds to reach the host after reboot, so a single run
+    // is easily missed. Reflash with `picotool load -f`.
+    while (true) {
+        sleep_ms(5000); // Give time for TTY to attach.
+        printf("Start tests\n");
+        UNITY_BEGIN();
+        RUN_TEST(test_switch_case_lower_to_upper);
+        RUN_TEST(test_switch_case_upper_to_lower);
+        RUN_TEST(test_switch_case_boundaries_unchanged);
+        RUN_TEST(test_switch_case_non_letters_unchanged);
+        RUN_TEST(test_switch_case_round_trip);
+        RUN_TEST(test_blink_first_iteration_does_not_toggle);
+        RUN_TEST(test_blink_increments_count);
+        RUN_TEST(test_blink_toggles_when_count_not_multiple_of_period);
+        RUN_TEST(test_blink_holds_when_count_multiple_of_period);
+        RUN_TEST(test_blink_step_writes_current_state_once);
+        RUN_TEST(test_blink_step_matches_original_sequence);
+        UNITY_END();
+    }
 }

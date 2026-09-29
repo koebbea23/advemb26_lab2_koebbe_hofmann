@@ -45,9 +45,15 @@ Outputs: `build/src/hello_freertos.{elf,uf2}`, `build/test/mytest.{elf,uf2}`,
    `--target flash_blink_hwtest`, for the app: `--target flash`).
    In VS Code, set the CMake Launch/Debug target and run the **Run Project**
    task (picotool) or **Flash** (OpenOCD with a debug probe).
-3. Open the serial port (`tio /dev/ttyACM0`) within 5 s to see the Unity
-   report, ending with `N Tests 0 Failures 0 Ignored OK`. When the tests
-   finish, the board reboots into BOOTSEL (`PICO_ENTER_USB_BOOT_ON_EXIT`).
+3. Open the serial port (`tio /dev/ttyACM0`) to see the Unity report, ending
+   with `N Tests 0 Failures 0 Ignored OK`. The test binaries rerun every 5 s,
+   so a late-attaching port still catches a full run. `picotool load -f`
+   reboots the board into BOOTSEL to reflash it.
+   - WSL: the USB serial driver must be loaded (`sudo modprobe cdc-acm`,
+     made persistent with `echo cdc-acm | sudo tee /etc/modules-load.d/cdc-acm.conf`),
+     and `usbipd attach --wsl --busid <ID> --auto-attach` must be running.
+     Install `picotool/udev/60-picotool.rules` into `/etc/udev/rules.d/`
+     so picotool works without sudo.
 
 ## Run tests in simulation
 Needs Renode (see the setup below). Run `ctest --test-dir build`, or use the
